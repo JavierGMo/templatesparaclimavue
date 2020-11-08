@@ -1,10 +1,19 @@
 <template>
     <div class="c-bar-search">
         <transition name="component-fade" mode="out-in">
-            <BaseAsideWeather :datetoday="datetoday" :show="show" :today="today" @update:show="show = $event"/>
+            <BaseAsideWeather
+                @update:show="show = $event"
+                :datetoday="datetoday"
+                :show="show"
+                :today="today"
+                :degreechangebaw="degreeChange"
+                :statedegree="statedegree" />
         </transition>
         <transition name="component-fade" mode="out-in">
-            <BaseSearchPlace :show="show" @update:alldays="sendNextDaysWeather($event)" @update:barsearch="show = $event"/>
+            <BaseSearchPlace
+                @update:alldays="sendNextDaysWeather($event)"
+                @update:barsearch="barsearchchange($event)"
+                :show="show" />
         </transition>
     </div>
 </template>
@@ -25,6 +34,14 @@ import BaseSearchPlace from "./BaseSearchPlace";
             datetoday : {
                 type : String,
                 default : new Date()
+            },
+            degreeChange : {
+                type : Boolean,
+                default : true
+            },
+            statedegree : {
+                type : Boolean,
+                default : true
             }
         },
         components: {
@@ -34,24 +51,24 @@ import BaseSearchPlace from "./BaseSearchPlace";
         methods : {
             sendNextDaysWeather : function(ev){
                 const este = this;
-                // console.log('Hola');
-                // console.log(ev);
                 if(ev){
-                    // this.allWeather = ev;
                     this.today = ev.dataToday;
-                    // this.dataNextDays = ev.dataNextDays;
                     this.$emit('update:nextdaysweather', {
-                            hightlights : {
-                                windspeed : ev.dataToday.wind_speed,
-                                winddirectioncompass : ev.dataToday.wind_direction_compass,
-                                humidity : ev.dataToday.humidity,
-                                visibility : ev.dataToday.visibility,
-                                airpressure : ev.dataToday.air_pressure
-                            },
-                            nextdays : ev.dataNextDays
-                        });
+                        hightlights : {
+                            windspeed : ev.dataToday.wind_speed,
+                            winddirectioncompass : ev.dataToday.wind_direction_compass,
+                            humidity : ev.dataToday.humidity,
+                            visibility : ev.dataToday.visibility,
+                            airpressure : ev.dataToday.air_pressure
+                        },
+                        nextdays : ev.dataNextDays
+                    });
                 }
-            }   
+            },
+            barsearchchange : function(change){
+                this.show = change;
+                this.$emit('update:updatedataweather', this.show);
+            } 
         }
     }
 </script>

@@ -35,28 +35,40 @@ export default {
 
         },
         searchWeatherBTN : async function(){
-            console.log('Hola quieres buscar un lugar');
+            // console.log('Hola quieres buscar un lugar');
             
             const este = this;
             if(this.searchLocation){
-                this.searchLocation = '';
-                let url = new URL('http://127.0.0.1:9000/weatherplace');
+                
+                // let url = new URL();
                 const param = this.searchLocation;
-                url.search = new URLSearchParams(param);
-
+                // url.search = new URLSearchParams(param);
+                let data = undefined;
+                let weatherDays = undefined;
+                let signalokres = true;
+                this.searchLocation = '';
                 try {
-                    const res = await fetch(url, {
+                    const res = await fetch(`http://127.0.0.1:9000/weatherplace?location=${param}`, {
                         method : 'GET',
                         headers : {
                             'Content-Type': 'application/json'
                         },
-                        // body : JSON.stringify({
-                        //     location : este.searchLocation
-                        // })
                     });
-                    const data = await res.json();
-                    const weatherDays = data['data'];
-                    console.log(weatherDays);
+                    if(res.status === 200){
+
+                        data = await res.json();
+                        weatherDays = data['data'];
+                        this.closeSearchBar = false;
+                        //Modificar el nombre del update para cuando la consulta sea correcta
+                        
+                        this.$emit('update:barsearch', false);
+                    }else if(res.status === 404){
+                        alert('Escriba bien el nombre del lugar :)');
+                    }else if(res.status === 500){
+                        alert('Vaya, tenemos algunos problemas :(');
+                    }
+                    
+                    // console.log(weatherDays);
                     este.$emit('update:alldays', weatherDays);
                     
                     

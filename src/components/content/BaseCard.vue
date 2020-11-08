@@ -3,11 +3,11 @@
         <div>
             <p>
                 <span v-if="index === 0" class="color-white-light">Tomorrow</span>
-                <span v-else class="color-white-light">{{ day.date }}</span>
+                <span v-else class="color-white-light">{{ date }}</span>
             </p>
         </div>
         <div class="d-fx f-center"><img :src="src(day.img_abbr)" alt="icon" class="c-card-img-weat"></div><!--Img card-->
-        <div><p><span class="c-temper-max color-white-light">{{ day.max_temp }}°{{ unitMeasure }}</span> <span class="c-temper-min">{{ day.min_temp }}°{{ unitMeasure }}</span></p></div><!--Text-->
+        <div><p><span class="c-temper-max color-white-light">{{ day.max_temp }}°{{ degreesLabel }}</span> <span class="c-temper-min">{{ day.min_temp }}°{{ degreesLabel }}</span></p></div><!--Text-->
     </div><!--Card weather-->
 </template>
 
@@ -28,10 +28,14 @@ export default {
                 'date' : 'Sun, 1 Jan'
             })
         },
-        unitMeasure : {
+        date : {
+            type : String,
+            default : 'Sum, 1 Jan'
+        },
+        degreesLabel : {
             type : String,
             default : 'C'
-        },
+        }
     },
     methods : {
         src : function(routeImage){

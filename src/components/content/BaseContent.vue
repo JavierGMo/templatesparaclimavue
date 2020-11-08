@@ -1,17 +1,21 @@
 <template>
     <div class="c-content-weather">
         <div class="c-content-units d-fx f-fend">
+            <!--Arreglar los botones de cambiar los grados-->
             <!-- <div><button class="c-btn-rounded c-btn-deegree" @click="showDeegrees = !showDeegrees" v-bind:class="[showDeegrees ? cDeegreeSelect : '']">°{{ unitMeasure }}</button></div>
             <div><button class="c-btn-rounded c-btn-deegree" @click="showDeegrees = !showDeegrees" v-bind:class="[!showDeegrees ? cDeegreeSelect : '']">°F</button></div> -->
-            <!-- <div><button class="c-btn-rounded c-btn-deegree" v-on:click="celsius" v-bind:class="[showDeegrees ? cDeegreeSelect : '']">°C</button></div>
-            <div><button class="c-btn-rounded c-btn-deegree" v-on:click="fahrenheit" v-bind:class="[!showDeegrees ? cDeegreeSelect : '']">°F</button></div> -->
+            <div><button class="c-btn-rounded c-btn-deegree" @click="celsius" v-bind:class="[showDeegrees ? cDeegreeSelect : '']">°C</button></div>
+            <div><button class="c-btn-rounded c-btn-deegree" @click="fahrenheit" v-bind:class="[!showDeegrees ? cDeegreeSelect : '']">°F</button></div> 
         </div>
         <div class="c-contents-cards d-fx f-center">
             <BaseCard
                 v-for="(day, index) in datanextdays"
                 :key="index"
                 :day="day"
-                :index="index" />
+                :index="index"
+                :degreesLabel="degreesLabel"
+                :date="dates[index]"
+            />
         </div><!--cards-->
         <div>
             <div><h4>Today's Hightlights</h4></div>
@@ -50,6 +54,14 @@ export default {
         BaseHumidity,
         BaseGeneralHighlight,
     },
+    data(){
+        return {
+            showDeegrees : true,
+            flagCelsius : false,
+            cDeegreeSelect : 'c-deegree-select',
+            degreesLabel : 'C'
+        }
+    },
     props : {
         datanextdays : {
             type : Array,
@@ -57,28 +69,23 @@ export default {
                 {'img_abbr' : 'hr',
                 'the_temp' : 0,
                 'min_temp' : 0,
-                'max_temp' : 0,
-                'date' : 'Sun, 1 Jan'},
+                'max_temp' : 0},
                 {'img_abbr' : 'hr',
                 'the_temp' : 0,
                 'min_temp' : 0,
-                'max_temp' : 0,
-                'date' : 'Sun, 1 Jan'},
+                'max_temp' : 0},
                 {'img_abbr' : 'hr',
                 'the_temp' : 0,
                 'min_temp' : 0,
-                'max_temp' : 0,
-                'date' : 'Sun, 1 Jan'},
+                'max_temp' : 0},
                 {'img_abbr' : 'hr',
                 'the_temp' : 0,
                 'min_temp' : 0,
-                'max_temp' : 0,
-                'date' : 'Sun, 1 Jan'},
+                'max_temp' : 0},
                 {'img_abbr' : 'hr',
                 'the_temp' : 0,
                 'min_temp' : 0,
-                'max_temp' : 0,
-                'date' : 'Sun, 1 Jan'}
+                'max_temp' : 0}
             ])
         },
         todayhightlights : {
@@ -91,9 +98,47 @@ export default {
                 airpressure : 0,
             })
         },
+        dates : {
+            type : Array,
+            default : ()=>([
+                'Sun, 1 Jan',
+                'Sun, 2 Jan',
+                'Sun, 3 Jan',
+                'Sun, 4 Jan',
+                'Sun, 5 Jan',
+            ])
+        }
     },
     methods : {
-        
+        celsius : function(){
+            if(this.flagCelsius){
+                this.degreesLabel = 'C';
+                this.showDeegrees = !this.showDeegrees;
+                this.flagCelsius = false;
+                for(const pos in this.datanextdays){
+                    this.datanextdays[pos]['the_temp'] = Math.round(((this.datanextdays[pos]['the_temp']-32)*(5/9)));
+                    this.datanextdays[pos]['min_temp'] = Math.round(((this.datanextdays[pos]['min_temp']-32)*(5/9)));
+                    this.datanextdays[pos]['max_temp'] = Math.round(((this.datanextdays[pos]['max_temp']-32)*(5/9)));
+                }
+                console.log('Flag celsius en celsius'+this.flagCelsius);
+                this.$emit('update:degreessignal', this.flagCelsius);
+            }
+        },
+        fahrenheit : function(){
+            if(!this.flagCelsius){
+                this.degreesLabel = 'F';
+                this.showDeegrees = !this.showDeegrees;
+                this.flagCelsius = true;
+                for(const pos in this.datanextdays){
+                    this.datanextdays[pos]['the_temp'] = Math.round((this.datanextdays[pos]['the_temp']*(9/5)))+32;
+                    this.datanextdays[pos]['min_temp'] = Math.round((this.datanextdays[pos]['min_temp']*(9/5)))+32;
+                    this.datanextdays[pos]['max_temp'] = Math.round((this.datanextdays[pos]['max_temp']*(9/5)))+32;
+                }
+                console.log('Flag celsius en fahrenheit'+this.flagCelsius);
+                this.$emit('update:degreessignal', this.flagCelsius);
+            }
+            
+        }
     }
 }
 </script>
