@@ -3,6 +3,7 @@
     <BaseAside 
         @update:updatedataweather="signalforchangestate($event)"
         @update:nextdaysweather="nextandtoday($event)"
+        @update:cardsupdatedegree="fncchangecarddegree($event)"
         :datetoday="dateweather().format('ddd, D MMM')"
         :degreeChange="degreeChange"
         :statedegree="statedegree" />
@@ -10,7 +11,8 @@
         @update:degreessignal="degreeschange($event)"
         :datanextdays="datanextdays"
         :todayhightlights="todayhightlights"
-        :dates="datesw"/>
+        :dates="datesw"
+        :auxchangecarddegree="auxchangecarddegree"/>
   </div>
 </template>
 
@@ -34,7 +36,8 @@ export default {
       dateweather : moment,
       datesw : undefined,
       degreeChange : undefined,
-      statedegree : true
+      statedegree : true,
+      auxchangecarddegree : true,
     }
   },
   methods : {
@@ -57,7 +60,9 @@ export default {
     },
     signalforchangestate : function (signal) {
         this.statedegree = signal;
-        console.log('sognak: ' + signal);
+    },
+    fncchangecarddegree : function(param){//Cambiar el los grados de las cards cuando esten en faren y volver al original
+        this.auxchangecarddegree = param;
     }
   }
 }

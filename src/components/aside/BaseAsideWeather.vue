@@ -9,7 +9,7 @@
             <!-- <div class="cont-deegree"><p class="color-white-light"><span class="txt-deegree-unit-bar">{{ today.the_temp }}</span><span class="txt-deegree-measure-bar color-gray-fifty">°{{ unitMeasure }}</span></div> -->
             <div class="cont-deegree">
                 <p class="color-white-light">
-                    <span class="txt-deegree-unit-bar">{{ determineDegree() }}</span><span class="txt-deegree-measure-bar color-gray-fifty"> °{{degreesLabel}}</span>
+                    <span class="txt-deegree-unit-bar">{{ degreechangebaw?celsius():fahrenheit() }}</span><span class="txt-deegree-measure-bar color-gray-fifty"> °{{degreesLabel}}</span>
                 </p>
                 <!-- degreechangebaw?celsius():fahrenheit() -->
             </div>
@@ -35,7 +35,9 @@ export default {
     data(){
         return {
             auxShow : false,
-            degreesLabel : 'C'
+            degreesLabel : 'C',
+            auxdegreechangebaw: true,
+            auxdefaultdegree : true,
         }
     },
     props : {
@@ -81,13 +83,12 @@ export default {
             return `https://www.metaweather.com/static/img/weather/${routeImage}.svg`
         },
         celsius : function(){
-            console.log(this.today['the_temp']);
             this.degreesLabel = 'C';
             return this.today['the_temp'];
             // return this.today['the_temp']?Math.round(((this.today['the_temp']-32)*(5/9))):0;
         },
         fahrenheit : function(){
-            console.log(this.today['the_temp']);
+            this.auxdefaultdegree = !this.statedegree;
             this.degreesLabel = 'F';
             return Math.round((this.today['the_temp']*(9/5)))+32;
         },
@@ -96,15 +97,20 @@ export default {
             return flagchange?'C':'F';
         },
         determineDegree : function(){
+            let label = 'c';
+            
             if(this.degreechangebaw){
-                return 'c';
+                label = 'C';
             }else{
+                label = 'f';
                 if(!this.statedegree){
-                    return 'c';
+                    label = 'ce';
                 }else{
-                    return 'f';
+                    label = 'fa';
                 }
             }
+            
+            return label;
         }
     }
 }

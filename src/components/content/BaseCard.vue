@@ -7,13 +7,19 @@
             </p>
         </div>
         <div class="d-fx f-center"><img :src="src(day.img_abbr)" alt="icon" class="c-card-img-weat"></div><!--Img card-->
-        <div><p><span class="c-temper-max color-white-light">{{ day.max_temp }}°{{ degreesLabel }}</span> <span class="c-temper-min">{{ day.min_temp }}°{{ degreesLabel }}</span></p></div><!--Text-->
+        <!-- <div><p><span class="c-temper-max color-white-light">{{ day.max_temp }}°{{ degreesLabel }}</span> <span class="c-temper-min">{{ day.min_temp }}°{{ degreesLabel }}</span></p></div> -->
+        <div><p><span class="c-temper-max color-white-light">{{ !degreesignal?celsius():fahrenheit() }}°{{ degreesLabel }}</span> <span class="c-temper-min">{{ !degreesignal?celsius():fahrenheit() }}°{{ degreesLabel }}</span></p></div>
     </div><!--Card weather-->
 </template>
 
 <script>
 export default {
     name : 'BaseCard',
+    dat(){
+        return {
+            labeldeg : 'C',
+        }
+    },
     props : {
         index : {
             type : Number
@@ -35,11 +41,24 @@ export default {
         degreesLabel : {
             type : String,
             default : 'C'
+        },
+        degreesignal : {
+            type : Boolean,
+            default : false,
         }
     },
     methods : {
         src : function(routeImage){
             return `https://www.metaweather.com/static/img/weather/${routeImage}.svg`
+        },
+        celsius : function(param){
+            //Se usa para que la data original no se modifique y no afecte si estamos fahrenheit
+            this.labeldeg = 'C';
+            return this.day['max_temp'];
+        },
+        fahrenheit : function(param){
+            this.labeldeg = 'F';
+            return Math.round((this.day['min_temp']*(9/5)))+32;
         },
     }
 }

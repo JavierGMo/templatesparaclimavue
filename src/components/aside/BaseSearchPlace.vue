@@ -20,7 +20,8 @@ export default {
     data(){
         return {
             closeSearchBar : true,
-            searchLocation : ''
+            searchLocation : '',
+            defaultdegrees : true
         }
     },
     props : {
@@ -46,7 +47,9 @@ export default {
                 let data = undefined;
                 let weatherDays = undefined;
                 let signalokres = true;
+                
                 this.searchLocation = '';
+
                 try {
                     const res = await fetch(`http://127.0.0.1:9000/weatherplace?location=${param}`, {
                         method : 'GET',
@@ -60,8 +63,9 @@ export default {
                         weatherDays = data['data'];
                         this.closeSearchBar = false;
                         //Modificar el nombre del update para cuando la consulta sea correcta
-                        
-                        this.$emit('update:barsearch', false);
+                        this.defaultdegrees = false;
+                        this.$emit('update:changedegreesok', this.defaultdegrees);//Cuando es status 200, enviamos un valor para restablecer los valores por defecto en celcius
+                        this.defaultdegrees = true;
                     }else if(res.status === 404){
                         alert('Escriba bien el nombre del lugar :)');
                     }else if(res.status === 500){

@@ -7,12 +7,13 @@
                 :show="show"
                 :today="today"
                 :degreechangebaw="degreeChange"
-                :statedegree="statedegree" />
+                :statedegree="defaultflagdegree" />
         </transition>
         <transition name="component-fade" mode="out-in">
             <BaseSearchPlace
                 @update:alldays="sendNextDaysWeather($event)"
                 @update:barsearch="barsearchchange($event)"
+                @update:changedegreesok="funcdefaultdegrees($event)"
                 :show="show" />
         </transition>
     </div>
@@ -27,7 +28,8 @@ import BaseSearchPlace from "./BaseSearchPlace";
             return {
                 show : false,
                 dataNextDays : {},
-                today : undefined
+                today : undefined,
+                defaultflagdegree : true,
             }
         },
         props : {
@@ -68,7 +70,11 @@ import BaseSearchPlace from "./BaseSearchPlace";
             barsearchchange : function(change){
                 this.show = change;
                 this.$emit('update:updatedataweather', this.show);
-            } 
+            },
+            funcdefaultdegrees : function(param){//fun para restablecer los valores por defecto en los grados y en el label de grados
+                this.defaultflagdegree = param;
+                this.$emit('update:cardsupdatedegree', this.defaultflagdegree);
+            }
         }
     }
 </script>

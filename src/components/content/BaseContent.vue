@@ -13,6 +13,7 @@
                 :key="index"
                 :day="day"
                 :index="index"
+                :degreesignal="flagCelsius"
                 :degreesLabel="degreesLabel"
                 :date="dates[index]"
             />
@@ -59,7 +60,8 @@ export default {
             showDeegrees : true,
             flagCelsius : false,
             cDeegreeSelect : 'c-deegree-select',
-            degreesLabel : 'C'
+            degreesLabel : 'C',
+            changecarddegree : true
         }
     },
     props : {
@@ -107,6 +109,10 @@ export default {
                 'Sun, 4 Jan',
                 'Sun, 5 Jan',
             ])
+        },
+        auxchangecarddegree : {
+            type : Boolean,
+            default : true,
         }
     },
     methods : {
@@ -115,12 +121,11 @@ export default {
                 this.degreesLabel = 'C';
                 this.showDeegrees = !this.showDeegrees;
                 this.flagCelsius = false;
-                for(const pos in this.datanextdays){
-                    this.datanextdays[pos]['the_temp'] = Math.round(((this.datanextdays[pos]['the_temp']-32)*(5/9)));
-                    this.datanextdays[pos]['min_temp'] = Math.round(((this.datanextdays[pos]['min_temp']-32)*(5/9)));
-                    this.datanextdays[pos]['max_temp'] = Math.round(((this.datanextdays[pos]['max_temp']-32)*(5/9)));
-                }
-                console.log('Flag celsius en celsius'+this.flagCelsius);
+                // for(const pos in this.datanextdays){
+                //     this.datanextdays[pos]['the_temp'] = Math.round(((this.datanextdays[pos]['the_temp']-32)*(5/9)));
+                //     this.datanextdays[pos]['min_temp'] = Math.round(((this.datanextdays[pos]['min_temp']-32)*(5/9)));
+                //     this.datanextdays[pos]['max_temp'] = Math.round(((this.datanextdays[pos]['max_temp']-32)*(5/9)));
+                // }
                 this.$emit('update:degreessignal', this.flagCelsius);
             }
         },
@@ -129,12 +134,11 @@ export default {
                 this.degreesLabel = 'F';
                 this.showDeegrees = !this.showDeegrees;
                 this.flagCelsius = true;
-                for(const pos in this.datanextdays){
-                    this.datanextdays[pos]['the_temp'] = Math.round((this.datanextdays[pos]['the_temp']*(9/5)))+32;
-                    this.datanextdays[pos]['min_temp'] = Math.round((this.datanextdays[pos]['min_temp']*(9/5)))+32;
-                    this.datanextdays[pos]['max_temp'] = Math.round((this.datanextdays[pos]['max_temp']*(9/5)))+32;
-                }
-                console.log('Flag celsius en fahrenheit'+this.flagCelsius);
+                // for(const pos in this.datanextdays){
+                //     this.datanextdays[pos]['the_temp'] = Math.round((this.datanextdays[pos]['the_temp']*(9/5)))+32;
+                //     this.datanextdays[pos]['min_temp'] = Math.round((this.datanextdays[pos]['min_temp']*(9/5)))+32;
+                //     this.datanextdays[pos]['max_temp'] = Math.round((this.datanextdays[pos]['max_temp']*(9/5)))+32;
+                // }
                 this.$emit('update:degreessignal', this.flagCelsius);
             }
             
